@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>vue2/test07.html</title>
+</head>
+<body>
+	<div class="container" id="app">
+		<input type="text" v-model="msg" placeholder="메세지 입력"/>
+		<button @click="clicked">추가</button>
+		<ul>
+			<li v-for="tmp in msgs">{{tmp}}</li>
+		</ul>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script>
+		new Vue({
+			el:"#app",
+			data:{
+				msgs:[],
+				msg:""
+			},
+			methods:{
+				clicked(){
+					this.msgs = [...this.msgs, this.msg];
+					this.msg="";
+				}
+			}
+		})
+	</script>
+</body>
+</html>

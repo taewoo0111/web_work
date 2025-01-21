@@ -10,7 +10,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>webapp/connection/test/jsp</title>
+<title>webapp/connection/test.jsp</title>
 </head>
 <body>
 	<div class="container">

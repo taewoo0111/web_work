@@ -11,7 +11,6 @@
 	dto.setAddr(addr);
 	new MemberDao().update(dto);
 	boolean isSuccess = new MemberDao().update(dto);
-	
 %>
 <!DOCTYPE html>
 <html>
@@ -20,15 +19,14 @@
 <title>/member/update.jsp</title>
 </head>
 <body>
-	<div class="container">
-		<h3>알림</h3>
-		<%if(isSuccess){ %>
-			<strong><%=dto.getNum()%></strong> 님의 정보를 변경했습니다.
-			<a href="list.jsp">목록 보기</a>
-		<%} else{ %>
-			회원정보 변경 실패!
-			<a href="updateform.jsp?num=<%=dto.getNum() %>">다시 변경</a>
+	<script>
+		<%if(isSuccess){%>
+			alert("성공");
+			location.href = "list.jsp";
+		<%}else{ %>
+			alert("실패");
+			location.href = "updateform.jsp?num=<%=num%>";
 		<%} %>
-	</div>
+	</script>
 </body>
 </html>

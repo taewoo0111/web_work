@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>/jquery/ajax.html</title>
+</head>
+<body>
+	<h1>jquery 에서 ajax 요청하기</h1>
+	<input type="text" placeholder="메세지 입력" id="inputMsg" />
+	<button id="sendBtn">전송</button>
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+	<script>
+		$("#sendBtn").click(()=>{
+			//const msg = $("#inputMsg").val();
+			$.ajax({
+				url:"send.jsp",
+				method:"post",
+				data:{msg:$("#inputMsg").val()},
+				success:(res)=>{
+					console.log(res);
+				}
+			});
+		});
+	</script>
+</body>
+</html>
