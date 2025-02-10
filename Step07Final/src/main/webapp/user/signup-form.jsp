@@ -1,0 +1,127 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>/user/signup-form.jsp</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+</head>
+<body>
+	<div class="container" id="app">
+		<h1 class="text-success">회원가입 폼 입니다.</h1>
+		<form action="signup.jsp" method="post" id="signupForm">
+			<div class="mb-2">
+				<label class="form-label" for="userName">이름</label>
+				<input :class="{'is-valid': isuserNameValid, 'is-invalid': !isuserNameValid && isuserNameDirty}" 
+					@input="onuserNameInput" class="form-control" type="text" name="userName" id="userName" placeholder="이름 입력..."/>
+				<small class="form-text text-info">영문자 소문자로 시작하고 5~10 글자 이네로 입력하세요</small>
+				<div class="valid-feedback alert alert-success">사용 가능한 이름 입니다.</div>
+				<div class="invalid-feedback alert alert-danger">사용할 수 없는 이름 입니다.</div>
+			</div>
+			<div class="mb-2">
+				<label class="form-label" for="password">비밀번호</label>
+				<input :class="{'is-invalid': !ispasswordValid && ispasswordDirty}" 
+					v-model="password"
+					@input="onpasswordInput"
+					class="form-control" type="password" name="password" id="password" placeholder="비밀번호 입력..."/>
+				<small class="form-text text-info">특수문자를 하나 이상 조합하세요.</small>
+				<div class="invalid-feedback alert alert-danger">사용이 불가능한 비밀번호입니다!</div>
+			</div>
+			<div class="mb-2">
+				<label class="form-label" for="password2">비밀번호 확인</label>
+				<input :class="{'is-invalid': !ispasswordSame && ispasswordSameDirty, 'is-valid': ispasswordSame}" 
+					v-model="password2"
+					@input="samepasswordInput"
+					class="form-control" type="password" id="password2" :disabled="!ispasswordValid" placeholder="비밀번호 확인!"/>
+				<div class="valid-feedback alert alert-success">비밀번호가 일치합니다!</div>
+				<div class="invalid-feedback alert alert-danger">비밀 번호가 일치하지 않아요!</div>
+			</div>
+			<div class="mb-2">
+				<label for="email" class="form-label">이메일</label>
+				<input @input="onEmailInput" :class="{'is-valid':isEmailValid, 'is-invalid': !isEmailValid && isEmailDirty}" 
+					type="email" name="email" id="email" class="form-control" placeholder="이메일 입력..."/>
+				<div class="valid-feedback alert alert-success">사용 가능한 이메일 입니다.</div>
+				<div class="invalid-feedback alert alert-danger">이미 가입된 이메일거나 이메일 형식에 맞지 않습니다!</div>
+			</div>
+			<button class="btn btn-success" type="submit" :disabled="!isuserNameValid || !ispasswordValid || !isEmailValid || !ispasswordSame">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send-plus-fill" viewBox="0 0 16 16">
+  					<path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 1.59 2.498C8 14 8 13 8 12.5a4.5 4.5 0 0 1 5.026-4.47zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471z"/>
+ 					<path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5"/>
+				</svg>
+				가입
+			</button>
+		</form>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+	<script>
+		new Vue({
+			el:"#app",
+			data:{
+				isuserNameValid:false,
+				isuserNameDirty:false,
+				ispasswordValid:false,
+				ispasswordDirty:false,
+				ispasswordSame:false,
+				ispasswordSameDirty:false,
+				isEmailValid:false,
+				isEmailDirty:false,
+				password:"",
+				password2:"",
+			},
+			methods:{
+				onuserNameInput(e){
+					this.isuserNameDirty=true;
+					const reg_userName = /^[a-z].{4,9}$/;
+					
+					let inputuserName = e.target.value;
+					if(!reg_userName.test(inputuserName)){
+						this.isuserNameValid = false;
+						return;
+					}
+					fetch("${pageContext.request.contextPath }/user/checkid.jsp?userName=" + inputuserName)
+					.then(res=>res.json())
+					.then(data=>{
+						if(data.canUse){
+							this.isuserNameValid = true;
+						}else{
+							this.isuserNameValid = false;
+						}
+					});
+				},
+				onEmailInput(e){
+					this.isEmailDirty = true;
+					const reg_email=/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+					
+					let email = e.target.value;
+					if(!reg_email.test(email)){
+						this.isEmailValid = false;
+						return;
+					}
+					fetch("${pageContext.request.contextPath }/user/checkemail.jsp?email=" + email)
+					.then(res=>res.json())
+					.then(data=>{
+						if(data.canUse){
+							this.isEmailValid = true;
+						}else{
+							this.isEmailValid = false;
+						}
+					});
+				},
+				onpasswordInput(e){
+					this.ispasswordDirty=true;
+					const reg_password = /[\W]/;
+					this.password = e.target.value;
+					this.ispasswordValid=reg_password.test(this.password);
+				},
+				samepasswordInput(e){
+					this.ispasswordSameDirty=true;
+					this.password2=e.target.value;
+					this.ispasswordSame=(this.password===this.password2);
+				}
+			}
+		});
+	</script>
+</body>
+</html>

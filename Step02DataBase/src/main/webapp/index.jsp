@@ -9,7 +9,7 @@
 <jsp:include page="/include/resource.jsp"></jsp:include>
 </head>
 <body class = "d-flex flex-column min-vh-100">
-	<div class="flex-grow-1">
+	<div class="flex-fill">
 		<%-- 이 부분은 navbar.jsp 페이지가 응답한다. --%>
 		<jsp:include page="/include/navbar.jsp">
 			<jsp:param value="index" name="current"/>

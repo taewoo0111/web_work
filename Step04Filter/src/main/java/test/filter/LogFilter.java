@@ -19,7 +19,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * 3. @WebFilter 어노테이션 이용해서 요청 맵핑하기
  */
 @WebFilter("/*") // "/*" 이 프로젝트에 오는 모든 요청에 대해서 필터가 동작 되게 한다.
-public class LogFilter	implements Filter{
+public class LogFilter implements Filter{
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)

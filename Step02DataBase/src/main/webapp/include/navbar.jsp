@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%
 	// navbar.jsp 페이지가 어떤 페이지에 include 되었는지 정보 읽어오기
-	String currentPage = request.getParameter("current"); // index, membr, food
+	String currentPage = request.getParameter("current"); // index, member, food
 %>
 <%-- /include/navbar.jsp 페이지의 내용 --%>
 	<nav class="navbar navbar-expand-md bg-primary" data-bs-theme="dark">

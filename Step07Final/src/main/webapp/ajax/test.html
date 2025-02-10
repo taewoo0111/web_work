@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>/ajax/test.html</title>
+</head>
+<body>
+	<h3>member.jsp 페이지를 요청하는 예제</h3>
+	<a href="member.jsp">요청하기(페이지 전환이 일어난다)</a>
+	<br />
+	<button onclick="request()">요청하기(fetch)</button>
+	<button onclick="request2()">요청하기(jquery)</button>
+	<button onclick="request3()">요청하기(XMLHttpRequest 활용)</button>
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+	<script>
+		function request(){
+			fetch("http://192.168.0.107:8888/Step07Final/ajax/member.jsp")
+			.then(res=>res.json())
+			.then(data=>{
+				console.log(data);
+			})
+			.catch(error=>{
+				console.log("에러정보:" + error);
+			});
+			console.log("fetch() 함수를 이용해서 요청했습니다.");
+		}
+		function request2(){
+			$.ajax({
+				url:"member.jsp",
+				method: "get",
+				success: function(data){
+					console.log(data);
+				}
+			});
+			console.log("$.ajax() 함수를 이용해서 요청했습니다.");
+		}
+		function request3(){
+			const xhr = new XMLHttpRequest();
+			xhr.open("GET", "member.jsp", true);
+			xhr.responseType = "json";
+			xhr.onload = function(){
+				if(xhr.status >= 200 && xhr.status < 300){
+					console.log(xhr.response);
+				}
+			};
+			xhr.send();
+		};
+	</script>
+</body>
+</html>

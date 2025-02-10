@@ -28,8 +28,9 @@
 			el:".wrapper",
 			methods:{
 				clicked(event){
-					event.target.innerText = "clicked";
-					event.target.style.backgroundColor = "yellow";
+					//event.target.innerText = "clicked";
+					//event.target.style.backgroundColor = "yellow";
+					Object.assign(event.target, { innerText: "clicked", style: "background-color: yellow;" });
 				}
 			}
 		})
