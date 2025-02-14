@@ -218,12 +218,19 @@ public class PostDao {
 	        conn = new DbcpBean().getConn();
 
 	        StringBuilder sql = new StringBuilder();
-	        sql.append("SELECT * FROM ");
-	        sql.append("(SELECT num, writer, title, content, viewCount, ");
-	        sql.append("TO_CHAR(createdAt, 'YYYY.MM.DD HH24:MI') AS createdAt, ");
-	        sql.append("LAG(num, 1, 0) OVER (ORDER BY num DESC) AS prevNum, ");
-	        sql.append("LEAD(num, 1, 0) OVER (ORDER BY num DESC) AS nextNum ");
-	        sql.append("FROM posts ");
+	        sql.append("""
+	        		select * from
+	        		(select num, writer, title, content, viewCount, to_char(createdat, 'YYYY.MM.DD HH24:MI') as createdat,
+	        		lag(num,1,0) over (order by num desc) as prevnum,
+	        		lead(num,1,0) over (order by num desc) as nextnum
+	        		from posts
+	        		""");
+//	        sql.append("SELECT * FROM ");
+//	        sql.append("(SELECT num, writer, title, content, viewCount, ");
+//	        sql.append("TO_CHAR(createdAt, 'YYYY.MM.DD HH24:MI') AS createdAt, ");
+//	        sql.append("LAG(num, 1, 0) OVER (ORDER BY num DESC) AS prevNum, ");
+//	        sql.append("LEAD(num, 1, 0) OVER (ORDER BY num DESC) AS nextNum ");
+//	        sql.append("FROM posts ");
 
 	        // 검색 조건 및 키워드 추가
 	        if (dto.getCondition() != null && dto.getKeyword() != null && !dto.getKeyword().isEmpty()) {
@@ -412,9 +419,14 @@ public class PostDao {
             conn = new DbcpBean().getConn();
 
             StringBuilder sql = new StringBuilder();
-            sql.append("SELECT * FROM ");
-            sql.append("(SELECT result1.*, ROWNUM AS rnum FROM ");
-            sql.append("(SELECT num, writer, title, viewCount, TO_CHAR(createdAt, 'YYYY.MM.DD HH24:MI') AS createdAt FROM posts ");
+//            sql.append("SELECT * FROM ");
+//            sql.append("(SELECT result1.*, ROWNUM AS rnum FROM ");
+//            sql.append("(SELECT num, writer, title, viewCount, TO_CHAR(createdAt, 'YYYY.MM.DD HH24:MI') AS createdAt FROM posts ");
+            	sql.append( """
+            			select * from
+            			(select result1.*, rownum as rnum from
+            			(select num, writer, title, viewCount, to_char(createdat, 'YYYY.MM.DD HH24:MI') as createdat from posts
+            			""");
 
             if (dto.getCondition() != null && dto.getKeyword() != null && !dto.getKeyword().isEmpty()) {
                 if (dto.getCondition().equals("title_content")) {

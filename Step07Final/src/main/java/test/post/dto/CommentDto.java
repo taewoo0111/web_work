@@ -12,6 +12,7 @@ public class CommentDto {
 	private String profileImage;
 	private int startRowNum;
 	private int endRowNum;
+	private int totalPageCount;
 	
 	public long getNum() {
 		return num;
@@ -79,6 +80,10 @@ public class CommentDto {
 	public void setEndRowNum(int endRowNum) {
 		this.endRowNum = endRowNum;
 	}
-	
-	
+	public int getTotalPageCount() {
+		return totalPageCount;
+	}
+	public void setTotalPageCount(int totalPageCount) {
+		this.totalPageCount = totalPageCount;
+	}
 }

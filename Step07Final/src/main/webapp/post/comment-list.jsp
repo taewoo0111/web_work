@@ -1,3 +1,5 @@
+<%@page import="java.util.Map"%>
+<%@page import="java.util.HashMap"%>
 <%@page import="com.google.gson.Gson"%>
 <%@page import="java.util.List"%>
 <%@page import="test.post.dao.CommentDao"%>
@@ -6,6 +8,7 @@
     pageEncoding="UTF-8"%>
 <%
 	// /post/comment-list./jsp 
+	Thread.sleep(1000);
 	
 	// 댓글의 페이지 번호
 	int pageNum = Integer.parseInt(request.getParameter("pageNum"));
@@ -28,7 +31,17 @@
 	dto.setStartRowNum(startRowNum);
 	dto.setEndRowNum(endRowNum);
 	
+	// 전체 댓글의 개수
+	int totalRow = CommentDao.getInstance().getCount(postNum);
+	// 전체 페이지의 개수
+	int totalPageCount = (int)Math.ceil(totalRow/(double)PAGE_ROW_COUNT);
+	
 	List<CommentDto> list = CommentDao.getInstance().getList(dto);
+	
+	Map<String, Object> map = new HashMap<>();
+	map.put("list", list);
+	map.put("totalPageCount", totalPageCount);
+	
 	Gson gson = new Gson();
 %>
-<%=gson.toJson(list) %>
+<%=gson.toJson(map) %>

@@ -18,8 +18,10 @@
 	}
 	
 	//한 페이지에 몇개씩 표시할 것인지
-	final int PAGE_ROW_COUNT=5;
-	//하단 페이지를 몇개씩 표시할 것인지
+	final int PAGE_ROW_COUNT=3;
+	
+	//하단 페이지를 몇개씩 표시할 것인지 
+	//페이지 그룹
 	final int PAGE_DISPLAY_COUNT=5;
 	
 	//보여줄 페이지의 번호를 일단 1이라고 초기값 지정
@@ -33,20 +35,26 @@
 		pageNum=Integer.parseInt(strPageNum);
 	}	
 	
-	//보여줄 페이지의 시작 ROWNUM
+	//보여줄 페이지의 시작 ROWNUM 1,4,7,10,...의 글이 첫번째로 온다.
 	int startRowNum=1+(pageNum-1)*PAGE_ROW_COUNT;
-	//보여줄 페이지의 끝 ROWNUM
+	//보여줄 페이지의 끝 ROWNUM 3,6,9,12,...의 글이 마지막에 온다.
 	int endRowNum=pageNum*PAGE_ROW_COUNT;
 	
 	//하단 시작 페이지 번호 
+	//해당 페이지(pageNum)가 몇 번째 페이지 그룹에 속해 있는지를 구하고, 그 그룹의 첫 번째 페이지 번호를 계산하는 공식
 	int startPageNum = 1 + ((pageNum-1)/PAGE_DISPLAY_COUNT)*PAGE_DISPLAY_COUNT;
 	//하단 끝 페이지 번호
+	//현재 페이지 그룹에서 마지막 페이지 번호(endPageNum)를 구하는 공식
 	int endPageNum=startPageNum+PAGE_DISPLAY_COUNT-1;
+	
 	//전체 글의 갯수
 	int totalRow=PostDao.getInstance().getCount(dto);
+	
 	//전체 페이지의 갯수 구하기
 	int totalPageCount=(int)Math.ceil(totalRow/(double)PAGE_ROW_COUNT);
+	
 	//끝 페이지 번호가 이미 전체 페이지 갯수보다 크게 계산되었다면 잘못된 값이다.
+	// 1페이지에 1개씩 보여주면 endpagenum 과 totalpagecount 가 같을 수는 있다.
 	if(endPageNum > totalPageCount){
 		endPageNum=totalPageCount; //보정해 준다. 
 	}	

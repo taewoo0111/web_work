@@ -5,7 +5,7 @@ create table users(
  	password varchar2(100) not null,
  	email varchar2(100) unique,
  	profileimage varchar2(100),
- 	role varchar2(10) default 'user' check (role in('ADMIN', 'STAFF', 'ADMIN')),
+ 	role varchar2(10) default 'user' check (role in('ADMIN', 'STAFF')),
  	createdat date default sysdate,
  	updatedat date default sysdate
 );
