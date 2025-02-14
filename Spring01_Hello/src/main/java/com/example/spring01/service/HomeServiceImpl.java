@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 /*
  * 	스프링 프레임 워크가 HomeServiceImpl 클래스가 존재하는 패키지(com.example.spring01.service) 를 
- * 	@ComponentScan 을 하게 되면 적절한 어노테이션(@Component)이 붙어 있는
+ * 	@ComponentScan(없어도 가능) 을 하게 되면 적절한 어노테이션(@Component)이 붙어 있는
  * 	이 클래스로 객체를 생성해서 해당 객체의 참조값을 spring bean container 에서 관리하게 된다.
  * 
  * 	어디를 scan 하게 되나?
