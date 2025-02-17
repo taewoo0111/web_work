@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>/templates/member/list.html</title>
+</head>
+<body>
+	<div class="container">
+		<h1>회원 목록</h1>
+		<ul th:each="tmp : ${list}">
+			<li>번호: <strong>[[${tmp.num}]]</strong></li>
+			<li>이름: <strong th:text="${tmp.name}"></strong></li>
+			<li>주소: <strong>[[${tmp.addr}]]</strong></li>
+		</ul>
+		<h1>회원 목록</h1>
+		<table>
+			<thead>
+				<tr>
+					<th>번호</th>
+					<th>이름</th>
+					<th>주소</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="tmp : ${list}">
+					<td>[[${tmp.num}]]</td>
+					<td th:text="${tmp.name}"></td>
+					<td th:text="${tmp.addr}"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>
