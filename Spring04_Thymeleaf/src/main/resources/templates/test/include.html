@@ -16,7 +16,15 @@
 	
 	<div class="container">
 		<h1>Main Contents 입니다.</h1>
-		<p>어쩌구...저쩌구...</p>	
+		<p>어쩌구...저쩌구...</p>
+		
+		<th:block th:insert="/include/side :: article('제목', '내용')"></th:block>	
+		
+		<th:block th:insert="/include/side :: article(content='내용2', title='제목2')"></th:block>	
+		
+		<th:block th:insert="/include/side :: article(${title}, ${content})"></th:block>
+		
+		<th:block th:insert="/include/side :: article(title=${title}, content=${content})"></th:block>		
 	</div>
 	
 </body>

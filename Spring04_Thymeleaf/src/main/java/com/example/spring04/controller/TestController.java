@@ -11,8 +11,25 @@ import com.example.spring04.dto.MemberDto;
 @Controller
 public class TestController {
 	
+	@GetMapping("/unescape")
+	public String unescape(Model model) {
+		
+		String html ="""
+				<ul>
+					<li>하나</li>
+					<li>두울</li>
+				</ul>
+				""";
+		model.addAttribute("content", html);
+		
+		return "test/unescape";
+	}
+	
 	@GetMapping("/include")
-	public String include() {
+	public String include(Model model) {
+		
+		model.addAttribute("title", "오늘의 인사");
+		model.addAttribute("content", "또 만났군요!");
 		
 		return "test/include";
 	}
