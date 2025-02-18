@@ -11,6 +11,45 @@ import com.example.spring04.dto.MemberDto;
 @Controller
 public class TestController {
 	
+	@GetMapping("/include")
+	public String include() {
+		
+		return "test/include";
+	}
+	
+	@GetMapping("/javascript")
+	public String javascript(Model model) {
+		
+		model.addAttribute("isLogin", false);
+		model.addAttribute("age", 15);
+		model.addAttribute("name", "김구라");
+		
+		MemberDto dto = MemberDto.builder().num(1).name("김구라").addr("노량진").build();
+		model.addAttribute("dto", dto);
+		
+		MemberDto dto1 = MemberDto.builder().num(1).name("김구라").addr("노량진").build();
+		MemberDto dto2 = MemberDto.builder().num(2).name("해골").addr("행신동").build();
+		MemberDto dto3 = MemberDto.builder().num(3).name("원숭이").addr("동물원").build();
+		List<MemberDto> list = List.of(dto1, dto2, dto3);
+		model.addAttribute("list", list);
+		
+		return "test/javascript";
+	}
+	
+	@GetMapping("/if")
+	public String ifTest(Model model) {
+		// 로그인 여부
+		model.addAttribute("isLogin", true);
+		// 나이
+		model.addAttribute("age", 30);
+		// 점수
+		model.addAttribute("jumsu", 80);
+		// role
+		model.addAttribute("role", "admin");
+		
+		return "test/if";
+	}
+	
 	@GetMapping("/sequence")
 	public String sequence() {
 		

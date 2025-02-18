@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>/templates/test/include.html</title>
+<th:block th:insert="/include/resource"></th:block>
+</head>
+<body>
+	
+	<th:block th:insert="/include/header :: myHeader"></th:block>
+	
+	<!-- /* /include/header.html 페이지에서 yourHeader 라는 fragment 를 이 요소 안에 출력하기 */ -->
+	<div th:insert="/include/header :: yourHeader" style="border:1px dotted red"></div>
+	
+	<div th:replace="/include/header :: ourHeader" style="border:1px solid blue"></div>
+	
+	<div class="container">
+		<h1>Main Contents 입니다.</h1>
+		<p>어쩌구...저쩌구...</p>	
+	</div>
+	
+</body>
+</html>
