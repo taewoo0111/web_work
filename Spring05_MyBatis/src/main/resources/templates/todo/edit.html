@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>/templates/todo/edit.html</title>
+</head>
+<body>
+	<div class="container">
+		<h1>기존의 할 일 정보</h1>
+		<ul>
+			<li th:text="${dto.todo}"></li>
+			<li th:text="${dto.time}"></li>
+		</ul>
+	</div>
+	<div class="container">
+		<h1>할 일 정보 수정 양식</h1>
+		<form th:action="@{/todo/update(id=${param.id})}" method="post">
+			<input type="text" name="todo" placeholder="할 일 입력..."/>
+			<input type="text" name="time" placeholder="시간 입력..."/>
+			<button type="submit">수정</button>
+		</form>
+	</div>
+</body>
+</html>

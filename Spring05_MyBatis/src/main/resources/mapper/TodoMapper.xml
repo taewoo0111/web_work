@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="todo">
+	<select id="getList" resultType="com.example.spring05.dto.TodoDto">
+		select id, todo, time
+		from todo
+		order by id asc
+	</select>
+	
+	<insert id="insert" parameterType="com.example.spring05.dto.TodoDto">
+		insert into todo
+		(id, todo, time)
+		values(todo_seq.nextval, #{todo}, #{time})
+	</insert>
+	
+	<update id="update" parameterType="com.example.spring05.dto.TodoDto">
+		update todo
+		set todo = #{todo}, time = #{time}
+		where id = #{id}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete todo
+		where id = #{id}
+	</delete>
+	
+	<select id="getData" resultType="com.example.spring05.dto.TodoDto">
+		select todo, time
+		from todo
+		where id = #{id}
+	</select>
+</mapper>
