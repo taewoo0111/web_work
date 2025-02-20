@@ -62,6 +62,9 @@ public class FileController {
 	@PostMapping("/file/upload2")
 	public String upload2(FileDto dto, Model model) {
 		
+		// @Data 가 오버라이드한 toString() 메소드를 확인하기 위해
+		System.out.println(dto); // 원래는 dto의 hash 값이 출력되어야 하는데 필드를 확인할 수 있는 문자열이 출력된다.
+		
 		MultipartFile myFile = dto.getMyFile();
 		
 		if(myFile.isEmpty()) {
