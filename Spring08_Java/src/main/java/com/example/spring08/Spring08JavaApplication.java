@@ -1,17 +1,42 @@
 package com.example.spring08;
 
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import com.example.spring08.util.WritingUtil;
+
+import jakarta.annotation.PostConstruct;
 
 @SpringBootApplication
 public class Spring08JavaApplication {
 
+	@Autowired private WritingUtil util; 
+	
+	@PostConstruct
+	public void testAop() {
+		util.writeLetter();
+		util.writeReport();
+		util.writeDiary();
+	}
+	
 	public static void main(String[] args) {
 		SpringApplication.run(Spring08JavaApplication.class, args);
+		
+		String pwd = "1234";
+		
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String encodedPwd = encoder.encode(pwd);
+		System.out.println(encodedPwd);
+		
+		boolean same = BCrypt.checkpw(pwd, encodedPwd);
+		System.out.println(same);
+		
 		
 		List<String> names = List.of("김구라", "해골", "원숭이");
 		Stream<String> stream = names.stream();
