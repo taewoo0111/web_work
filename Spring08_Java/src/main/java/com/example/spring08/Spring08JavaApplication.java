@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.example.spring08.util.Messenger;
 import com.example.spring08.util.WritingUtil;
 
 import jakarta.annotation.PostConstruct;
@@ -17,9 +18,16 @@ import jakarta.annotation.PostConstruct;
 public class Spring08JavaApplication {
 
 	@Autowired private WritingUtil util; 
+	@Autowired private Messenger messenger;
 	
 	@PostConstruct
 	public void testAop() {
+		messenger.sendGreeting("안녕하세요!");
+		messenger.sendGreeting("안녕 바보야!");
+		
+		String result = messenger.getMessage();
+		System.out.println("result:" + result);
+		
 		util.writeLetter();
 		util.writeReport();
 		util.writeDiary();
