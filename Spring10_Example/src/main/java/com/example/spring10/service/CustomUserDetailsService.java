@@ -30,7 +30,11 @@ public class CustomUserDetailsService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 		
 		UserDto dto = dao.getData(userName);
-
+		if(dto==null) {
+			throw new UsernameNotFoundException("존재하지 않는 사용자 입니다.");
+		}
+		
+		
 		// 권한 목록을 List 에 담아서 (지금은 1개 이지만)
 		List<GrantedAuthority> authList = new ArrayList<>();
 		authList.add(new SimpleGrantedAuthority(dto.getRole()));

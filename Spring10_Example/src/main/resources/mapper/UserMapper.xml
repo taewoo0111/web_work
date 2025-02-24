@@ -24,4 +24,16 @@
 		where username = #{username}
 	</select>
 	
+	<select id="updatePassword" parameterType="com.example.spring10.dto.UserDto">
+		update users
+		set password = #{newPassword}
+		where userName = #{userName}
+	</select>
+	
+	<update id="update" parameterType="com.example.spring10.dto.UserDto">
+		update users
+		set email = #{email}, updatedAt = sysdate 
+		<if test="profileImage != null">, profileImage = #{profileImage}</if>
+		where userName = #{userName}
+	</update>
 </mapper>

@@ -78,8 +78,7 @@
 						this.isuserNameValid = false;
 						return;
 					}
-					this.isuserNameValid = true;
-					/* fetch("[[@{/user/checkid}]]?userName=" + inputuserName)
+					fetch("[[@{/user/checkid}]]?userName=" + inputuserName)
 					.then(res=>res.json())
 					.then(data=>{
 						if(data.canUse){
@@ -87,7 +86,7 @@
 						}else{
 							this.isuserNameValid = false;
 						}
-					}); */
+					}); 
 				},
 				onEmailInput(e){
 					this.isEmailDirty = true;

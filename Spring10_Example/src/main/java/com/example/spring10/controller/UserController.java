@@ -1,22 +1,74 @@
 package com.example.spring10.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.spring10.dto.UserDto;
 import com.example.spring10.service.UserService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class UserController {
 	
 	@Autowired private UserService service;
 	
+	@PostMapping("/user/update")
+	public String update(UserDto dto) {
+		service.updateUserInfo(dto);
+		return "redirect:/user/info";
+	}
+	
+	@GetMapping("/user/edit")
+	public String edit(@AuthenticationPrincipal UserDetails ud, Model model) {
+		String userName = ud.getUsername();
+		UserDto dto = service.getByUserName(userName);
+		model.addAttribute("dto", dto);
+		return "user/edit";
+	}
+	
+	@PostMapping("/user/update-password")
+	public String updatePassword(UserDto dto, HttpSession session) {
+		service.changePassword(dto);
+		session.invalidate();
+		return "user/update-password";
+	}
+	
+	@GetMapping("/user/edit-password")
+	public String editPassword() {
+		return "user/edit-password";
+	}
+	
+	@GetMapping("/user/info")
+	public String info(Model model) {
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		UserDto dto = service.getByUserName(userName);
+		model.addAttribute("dto", dto);
+		return "user/info";
+	}
+	
+	@GetMapping("/user/checkid")
+	@ResponseBody
+	public Map<String, Boolean> checkid(String userName){
+		UserDto dto = service.getByUserName(userName);
+		boolean canUse = dto == null ? true : false;
+		//Map<String, Boolean> map = Map.of("canUse", canUse);
+		return Map.of("canUse", canUse);
+	}
+	
 	@PostMapping("/user/signup")
 	public String signup(UserDto dto) {
-		service.save(dto);
+		service.createUser(dto);
 		return "user/signup";
 	}
 	
