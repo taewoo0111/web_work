@@ -3,6 +3,7 @@ package com.example.spring10.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.example.spring10.dto.PostDto;
@@ -65,9 +66,32 @@ public class PostServiceImpl implements PostService{
 	}
 
 	@Override
-	public void createPost(PostDto dto) {
-		// TODO Auto-generated method stub
-		
+	public long createPost(PostDto dto) {
+		String writer = SecurityContextHolder.getContext().getAuthentication().getName();
+		dto.setWriter(writer);
+		long num = postDao.getSequence();
+		dto.setNum(num);
+		postDao.insert(dto);
+		return num;
 	}
 
+	@Override
+	public PostDto getByNum(long num) {
+		return postDao.getData(num);
+	}
+
+	@Override
+	public PostDto getDetail(PostDto dto) {
+		return postDao.getDetail(dto);
+	}
+
+	@Override
+	public void updatePost(PostDto dto) {
+		postDao.update(dto);
+	}
+
+	@Override
+	public void deletePost(long num) {
+		postDao.delete(num);
+	}
 }

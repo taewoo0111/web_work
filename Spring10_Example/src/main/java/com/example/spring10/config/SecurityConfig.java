@@ -22,9 +22,14 @@ public class SecurityConfig {
 	@Bean //메소드에서 리턴되는 SecurityFilterChain 을 bean 으로 만들어준다.
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
 		String[] whiteList= {"/", "/play", "/user/loginform", "/user/login-fail", "/user/expired", "/user/signup-form", "/user/signup", "/user/checkid",
-				"/upload/**", "/post/list"};
+				"/upload/**", "/post/list", "/post/view"};
 		
 		httpSecurity
+		.headers(header -> 
+			// 스마트에디터를 사용할 수 있게 해주는 코드
+			// iframe 을 사용할 수 있도록 설정(default 값은 사용불가, smartEditor 에서 필요함)
+			header.frameOptions(option -> option.sameOrigin())
+		)
 		.csrf(csrf->csrf.disable())
 		.authorizeHttpRequests(config ->
 			config

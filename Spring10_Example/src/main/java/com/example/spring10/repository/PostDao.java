@@ -10,4 +10,8 @@ public interface PostDao {
 	public int delete(long num);
 	public int update(PostDto dto);
 	public int getCount(PostDto dto);
+	public PostDto getData(long num);
+	public PostDto getDetail(PostDto dto);
+	
+	public long getSequence();
 }
