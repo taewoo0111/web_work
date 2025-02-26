@@ -20,6 +20,29 @@
 		</choose>
 	</sql>
 	
+	<delete id="deleteReaded" parameterType="long">
+		delete readed_data
+		where num = #{num}
+	</delete>
+	
+	<update id="addViewCount" parameterType="long">
+		update posts
+		set viewcount = viewcount +1
+		where num = #{num}
+	</update>
+	
+	<select id="isReaded" parameterType="map" resultType="map">
+		select *
+		from readed_data
+		where num = #{num} and session_Id = #{sessionId}
+	</select>
+	
+	<insert id="insertReaded" parameterType="map">
+	 	insert into readed_data
+	 	(num, session_id)
+	 	values(#{num}, #{sessionId})
+	</insert>
+	
 	<!-- 
 		parameter 로 전달되는 PostDto 에는 검색 keyword 가 있을수 있다. 
 		keyword 가 있다면 keyword 에 해당하는 글 목록중에서 이전글의 글번호와 다음글의 글번호를 select 해야한다. 

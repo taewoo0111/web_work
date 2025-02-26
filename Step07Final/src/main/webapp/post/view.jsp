@@ -442,7 +442,7 @@
 				</dl>
 				<!-- 댓글의 댓글 작성할 폼 미리 출력하기 -->
 				<form class="re-insert-form"  method="post">
-					<input type="hidden" name="postNum" value="${dto.num }"/>
+					<input type="hidden" name="postNum" th:value="${postDto.num }"/>
 					<input type="hidden" name="targetWriter" value="\${comment.writer }"/>
 					<input type="hidden" name="parentNum" value="\${comment.parentNum }"/>
 					<textarea name="content"></textarea>

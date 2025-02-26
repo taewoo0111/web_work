@@ -1,5 +1,7 @@
 package com.example.spring10.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,16 +9,49 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.spring10.dto.CommentDto;
+import com.example.spring10.dto.CommentListRequest;
 import com.example.spring10.dto.PostDto;
 import com.example.spring10.dto.PostListDto;
 import com.example.spring10.service.PostService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class PostController {
 	
 	@Autowired private PostService service;
+	
+	@PostMapping("/post/update-comment")
+	@ResponseBody
+	public Map<String, Boolean> commentUpdate(CommentDto dto){
+		service.updateComment(dto);
+		return Map.of("isSuccess", true);
+	}
+	
+	@GetMapping("/post/delete-comment")
+	@ResponseBody
+	public Map<String, Boolean> deleteComment(long num){
+		service.deleteComment(num);
+		return Map.of("isSuccess", true);
+	}
+	
+	@GetMapping("/post/comment-list")
+	@ResponseBody 
+	public Map<String, Object> commentList(CommentListRequest clr){
+		return service.getComments(clr);
+	}
+	
+	// 댓글 저장 요청 처리
+	@PostMapping("/post/save-comment")
+	@ResponseBody
+	public CommentDto saveComment(CommentDto dto) {
+		service.createComment(dto);
+		return dto;
+	}
 	
 	@GetMapping("/post/delete")
 	public String delete(long num) {
@@ -39,9 +74,15 @@ public class PostController {
 	}
 	
 	@GetMapping("/post/view")
-	public String view(@ModelAttribute PostDto dto, Model model) {
+	public String view(@ModelAttribute PostDto dto, Model model, HttpSession session) {
 		PostDto resultDto = service.getDetail(dto);
 		model.addAttribute("postDto", resultDto);
+		
+		if(model.getAttribute("saveMessage") == null) {
+			String sessionId = session.getId();
+			service.manageViewCount(dto.getNum(), sessionId);
+		}
+		
 		return "post/view";
 	}
 	

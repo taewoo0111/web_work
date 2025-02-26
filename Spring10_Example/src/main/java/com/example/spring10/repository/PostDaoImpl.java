@@ -1,6 +1,7 @@
 package com.example.spring10.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,30 @@ public class PostDaoImpl implements PostDao{
 	@Override
 	public PostDto getDetail(PostDto dto) {
 		return session.selectOne("post.getDetail", dto);
+	}
+
+	@Override
+	public int insertReaded(long num, String sessionId) {
+		Map<String, Object> map = Map.of("num", num, "sessionId", sessionId);
+		return session.insert("post.insertReaded", map);
+	}
+
+	@Override
+	public boolean isReaded(long num, String sessionId) {
+		Map<String, Object> map = Map.of("num", num, "sessionId", sessionId);
+		Map<String, Object> resultMap = session.selectOne("post.isReaded", map);
+		
+		return resultMap != null;
+	}
+
+	@Override
+	public int addViewCount(long num) {
+		return session.update("post.addViewCount", num);
+	}
+
+	@Override
+	public int deleteReaded(long num) {
+		return session.delete("post.deleteReaded", num);
 	}
 
 }

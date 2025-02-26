@@ -1,13 +1,18 @@
 package com.example.spring10.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.example.spring10.dto.CommentDto;
+import com.example.spring10.dto.CommentListRequest;
 import com.example.spring10.dto.PostDto;
 import com.example.spring10.dto.PostListDto;
+import com.example.spring10.repository.CommentDao;
 import com.example.spring10.repository.PostDao;
 
 @Service
@@ -17,6 +22,7 @@ public class PostServiceImpl implements PostService{
 	final int PAGE_DISPLAY_COUNT = 5;
 	
 	@Autowired private PostDao postDao;
+	@Autowired private CommentDao commentDao;
 	
 	/*
 	 * pageNum 과 검색 조건, 키워드가 담겨 있을 수 있는 PostDto 를 전달하면
@@ -92,6 +98,73 @@ public class PostServiceImpl implements PostService{
 
 	@Override
 	public void deletePost(long num) {
+		postDao.deleteReaded(num);
 		postDao.delete(num);
+	}
+
+	@Override
+	public void manageViewCount(long num, String sessionId) {
+		boolean isReaded = postDao.isReaded(num, sessionId);
+		if(!isReaded) {
+			postDao.addViewCount(num);
+			postDao.insertReaded(num, sessionId);
+		}
+	}
+
+	@Override
+	public void createComment(CommentDto dto) {
+		String writer = SecurityContextHolder.getContext().getAuthentication().getName();
+		long num = commentDao.getSequence();
+		long parentNum = dto.getParentNum();
+		if(parentNum == 0) {
+			parentNum = num;
+		}
+		dto.setNum(num);
+		dto.setWriter(writer);
+		dto.setParentNum(parentNum);
+		commentDao.insert(dto);
+	}
+
+	@Override
+	public void updateComment(CommentDto dto) {
+		commentDao.update(dto);
+	}
+
+	@Override
+	public void deleteComment(long num) {
+		commentDao.delete(num);
+	}
+
+	@Override
+	public Map<String, Object> getComments(CommentListRequest clr) {
+		CommentDto dto = new CommentDto();
+		dto.setPostNum(clr.getPostNum());
+		
+		/*
+			[ 댓글 페이징 처리에 관련된 로직 ]
+		*/
+		//한 페이지에 댓글을 몇개씩 표시할 것인지
+		final int PAGE_ROW_COUNT = 10;
+		int pageNum = clr.getPageNum();
+		//보여줄 페이지의 시작 ROWNUM
+		int startRowNum = 1 + (pageNum - 1) * PAGE_ROW_COUNT;
+		//보여줄 페이지의 끝 ROWNUM
+		int endRowNum = pageNum * PAGE_ROW_COUNT;
+		//계산된 값을 dto 에 담는다
+		dto.setStartRowNum(startRowNum);
+		dto.setEndRowNum(endRowNum);
+		
+		// 전체 댓글의 개수
+		int totalRow = commentDao.getCount(clr.getPostNum());
+		// 전체 페이지의 개수
+		int totalPageCount = (int)Math.ceil(totalRow/(double)PAGE_ROW_COUNT);
+		
+		List<CommentDto> list = commentDao.getList(dto);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		map.put("totalPageCount", totalPageCount);
+		
+		return map;
 	}
 }
