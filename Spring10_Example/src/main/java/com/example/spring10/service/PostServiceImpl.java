@@ -12,6 +12,7 @@ import com.example.spring10.dto.CommentDto;
 import com.example.spring10.dto.CommentListRequest;
 import com.example.spring10.dto.PostDto;
 import com.example.spring10.dto.PostListDto;
+import com.example.spring10.exception.DeniedException;
 import com.example.spring10.repository.CommentDao;
 import com.example.spring10.repository.PostDao;
 
@@ -98,6 +99,13 @@ public class PostServiceImpl implements PostService{
 
 	@Override
 	public void deletePost(long num) {
+		// 글의 작성자와 로그인된 userName 과 다르면 Exception 을 발생시키고 ExceptionController 에서 처리하게 한다.
+//		String writer = postDao.getData(num).getWriter();
+//		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+//		if(!writer.equals(userName)) {
+//			throw new DeniedException("게시글 작성자가 아닙니다!");
+//		}
+		
 		postDao.deleteReaded(num);
 		postDao.delete(num);
 	}

@@ -1,13 +1,21 @@
 package com.example.spring10.controller;
 
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.spring10.exception.DeniedException;
 import com.example.spring10.exception.PasswordException;
 
 @ControllerAdvice
 public class ExceptionController {
+	
+	@ExceptionHandler(DeniedException.class)
+	public String denied(DeniedException de, Model model) {
+		model.addAttribute("exception", de);
+		return "error/denied";
+	}
 	
 	/*
 	 * "/user/update-password" 요청을 처리하는 중에 기본 비밀번호가 일치하지 않으면
