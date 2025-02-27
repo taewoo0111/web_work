@@ -155,7 +155,7 @@
 <body>
 	<div class="container">
 		<!--/* 새로운 글을 작성했으면 saveMessage 가 존재한다 */-->
-		<p class="alert alert-success" th:if="${saveMessage != null}">[[${saveMessage}]]</p>
+		<p class="alert alert-success" th:if="${saveMessage != null}" th:text="${saveMessage}"/>
 		
 		<!--/* 글을 수정했으면 updateMessage 가 존재한다 */-->
 		<p class="alert alert-success" th:if="${updateMessage != null}">[[${updateMessage}]]</p>
@@ -335,8 +335,11 @@
 		//로그인된 사용자의 이름
 		const userName="[[${session.userName}]]";
 		//로그인 여부
-		const isLogin=[[${session.userName == null ? false : true }]];
-	
+		</script>
+		<script th:inline="javascript">
+			const isLogin="[[${session.userName == null ? false : true }]]";
+		</script>
+		<script>
 		document.querySelector(".comment-form").addEventListener("submit", (e)=>{
 			//폼 제출 막기 
 			e.preventDefault();
