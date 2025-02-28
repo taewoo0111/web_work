@@ -10,6 +10,6 @@ public interface FileDao {
 	public int delete(long num);
 	public int getCount(FileDto dto);
 	public long getSequence();
-	public FileDto getDetail(FileDto dto);
+	//public FileDto getDetail(FileDto dto);
 	public FileDto getData(long num);
 }

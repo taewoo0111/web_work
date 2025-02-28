@@ -38,10 +38,10 @@ public class FileDaoImpl implements FileDao{
 		return session.selectOne("file.getSequence");
 	}
 
-	@Override
-	public FileDto getDetail(FileDto dto) {
-		return session.selectOne("file.getDetail", dto);
-	}
+//	@Override
+//	public FileDto getDetail(FileDto dto) {
+//		return session.selectOne("file.getDetail", dto);
+//	}
 
 	@Override
 	public FileDto getData(long num) {

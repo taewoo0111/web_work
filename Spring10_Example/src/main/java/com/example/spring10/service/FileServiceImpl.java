@@ -54,10 +54,10 @@ public class FileServiceImpl implements FileService{
 		return num;
 	}
 
-	@Override
-	public FileDto getDetail(FileDto dto) {
-		return fileDao.getDetail(dto);
-	}
+//	@Override
+//	public FileDto getDetail(FileDto dto) {
+//		return fileDao.getDetail(dto);
+//	}
 
 	@Override
 	public void deleteFile(long num) {
