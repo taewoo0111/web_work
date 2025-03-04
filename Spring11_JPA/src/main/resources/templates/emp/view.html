@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>/templates/emp/view.html</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+</head>
+<body>
+	<div class="container mt-5">
+		<div class="row justify-content-center">
+			<div class="col-lg-8">
+				<div class="card shadow-lg">
+					<div class="card-header bg-primary text-white text-center">
+						<h3 class="mb-0">[[${dto.ename}]]의 개인정보</h3>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive">
+							<table
+								class="table table-striped table-hover table-bordered text-center">
+								<tbody>
+									<tr>
+										<th class="bg-light">사원번호</th>
+										<td>[[${dto.empno}]]</td>
+									</tr>
+									<tr>
+										<th class="bg-light">사원이름</th>
+										<td>[[${dto.ename}]]</td>
+									</tr>
+									<tr>
+										<th class="bg-light">사원직업</th>
+										<td>[[${dto.job}]]</td>
+									</tr>
+									<tr>
+										<th class="bg-light">매니저번호</th>
+										<td>[[${dto.mgr}]]</td>
+									</tr>
+									<tr>
+										<th class="bg-light">입사날짜</th>
+										<td>[[${dto.hiredate}]]</td>
+									</tr>
+									<tr>
+										<th class="bg-light">사원급여</th>
+										<td>[[${dto.sal}]]</td>
+									</tr>
+									<tr>
+										<th class="bg-light">사원커미션</th>
+										<td>[[${dto.comm}]]</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="card-footer text-center">
+						<a class="btn btn-secondary" th:href="@{/emp/list2}">뒤로가기</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-@Entity(name = "MEMBER_INFO")
+@Entity(name = "MEMBER")
 public class Member {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
