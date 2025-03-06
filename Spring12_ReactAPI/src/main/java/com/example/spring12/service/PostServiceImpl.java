@@ -4,10 +4,15 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.spring12.dto.PostDto;
+import com.example.spring12.dto.PostPageResponse;
 import com.example.spring12.entity.Post;
 import com.example.spring12.repository.PostRepository;
 
@@ -15,6 +20,9 @@ import com.example.spring12.repository.PostRepository;
 public class PostServiceImpl implements PostService{
 
 	@Autowired private PostRepository repo;
+	
+	final int PAGE_ROW_COUNT = 10;
+	final int PAGE_DISPLAY_COUNT = 5;
 	
 	@Override
 	public PostDto save(PostDto dto) {
@@ -66,6 +74,24 @@ public class PostServiceImpl implements PostService{
 	public PostDto find(long id) {
 		Post post = repo.findById(id).orElseThrow(() -> new IllegalStateException("없는 번호입니다!"));
 		return PostDto.toDto(post);
+	}
+
+	@Override
+	public PostPageResponse findPage(int pageNum) {
+		// id 칼럼에 대해서 내림차순 정렬하라는 정보를 가지고 있는 Sort 객체 만들기
+		Sort sort = Sort.by(Sort.Direction.DESC, "id");
+		Pageable pageable = PageRequest.of(pageNum-1, PAGE_ROW_COUNT, sort); 
+		Page<Post> page = repo.findAll(pageable);
+		// 글 목록
+		List<PostDto> list = page.stream().map(PostDto::toDto).toList();
+		
+		int startPageNum = 1 + ((pageNum - 1) / PAGE_DISPLAY_COUNT) * PAGE_DISPLAY_COUNT;
+		int endPageNum = startPageNum + PAGE_DISPLAY_COUNT - 1;
+		int totalPageCount = page.getTotalPages(); // Page 객체에 이미 계산되어서 들어있다.
+		if (endPageNum > totalPageCount) endPageNum = totalPageCount; 
+		
+		return PostPageResponse.builder().list(list).startPageNum(startPageNum).endPageNum(endPageNum)
+				.totalPageCount(totalPageCount).pageNum(pageNum).build();
 	}
 
 }
