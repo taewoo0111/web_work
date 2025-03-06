@@ -1,6 +1,7 @@
 package com.example.spring12.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,12 +50,15 @@ public class PostServiceImpl implements PostService{
 	@Override
 	public PostDto update(PostDto dto) {
 		Post post = repo.findById(dto.getId()).orElseThrow(() -> new IllegalStateException("없는 번호입니다!"));
-		if(dto.getTitle()!=null) {
-			post.setTitle(dto.getTitle());
-		}
-		if(dto.getAuthor()!=null) {
-			post.setAuthor(dto.getAuthor());
-		}
+//		if(dto.getTitle()!=null) {
+//			post.setTitle(dto.getTitle());
+//		}
+		Optional.ofNullable(dto.getTitle()).ifPresent(post::setTitle);
+		
+//		if(dto.getAuthor()!=null) {
+//			post.setAuthor(dto.getAuthor());
+//		}
+		Optional.ofNullable(dto.getAuthor()).ifPresent(post::setAuthor);
 		return PostDto.toDto(post);
 	}
 
