@@ -43,9 +43,9 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
+                .setSigningKey(getSigningKey()) // token 발급 시 서명했던 키값도 일치하는지 확인도 된다.
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -73,12 +73,8 @@ public class JwtUtil {
     
     // token 검증하는 메소드
     public Boolean validateToken(String token) {
-    	// token 으로부터 userName 을 얻어낼 수 있다.
-        final String username = extractUsername(token);
-        // token 에 담긴 추가 정보를 얻어낼 수 있다. (role, issuer, email 등등)
-        final Claims claims = extractAllClaims(token);
-
-        return ( !isTokenExpired(token) &&
-                "your-issuer".equals(claims.getIssuer())); // 추가 검증
+    	Claims claims = extractAllClaims(token);
+    	boolean isValid = !isTokenExpired(token) && "your-issuer".equals(claims.getIssuer());
+    	return isValid;
     }
 }

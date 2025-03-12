@@ -30,9 +30,8 @@ public class SecurityConfig {
 	
 	@Bean 
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
-			AuthSuccessHandler successHandler,
-			CookieRequestCache cookCache) throws Exception{
-		String[] whiteList= {"/", "/play", "/user/loginform", "/user/login-fail", "/user/expired"};
+			AuthSuccessHandler successHandler) throws Exception{
+		String[] whiteList= {"/error", "/favicon.ico", "/api/auth", "/", "/play", "/user/loginform", "/user/login-fail", "/user/expired"};
 		
 		httpSecurity
 		.csrf(csrf->csrf.disable())
@@ -49,7 +48,7 @@ public class SecurityConfig {
 				.loginProcessingUrl("/user/login")
 				.usernameParameter("userName")
 				.passwordParameter("password")
-				.successHandler(new AuthSuccessHandler()) 
+				.successHandler(successHandler) 
 				.failureForwardUrl("/user/login-fail")
 				.permitAll() 
 		)
@@ -74,8 +73,8 @@ public class SecurityConfig {
 			// 세션을 사용하지 않도록 설정한다.
 			config.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		)
-		.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-		.requestCache(config -> config.requestCache(cookCache));
+		.requestCache(config -> config.requestCache(new CookieRequestCache()))
+		.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 		
 		return httpSecurity.build();
 	}
@@ -93,11 +92,5 @@ public class SecurityConfig {
 				.passwordEncoder(encoder)
 				.and()
 				.build();
-	}
-	
-	// 쿠키 캐시를 bean 으로 만든다.
-	@Bean
-	CookieRequestCache getCookieRequestCache() {
-		return new CookieRequestCache();
 	}
 }

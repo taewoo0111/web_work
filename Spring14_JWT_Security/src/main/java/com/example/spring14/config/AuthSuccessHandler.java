@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.CookieRequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
@@ -32,6 +33,9 @@ public class AuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHa
 	// Jwt 토큰 유틸
 	@Autowired
 	private JwtUtil jwtUtil;
+	
+	// 쿠키에 저장된 요청 경로를 자동으로 읽어오는 객체를 생성해서 필드에 담둔다.
+	private CookieRequestCache requestCache = new CookieRequestCache();
 
 	// jwt 를 쿠키로 저장할때 쿠키의 이름
 	@Value("${jwt.name}")
@@ -39,45 +43,40 @@ public class AuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHa
 	// 쿠키 유지시간
 	@Value("${jwt.cookie.expiration}")
 	private int cookieExpiration;
-
-	// 로그인 성공후 원래 목적지로 리다일렉트 시켜주기 위해 필요한 객체
-	@Autowired
-	private CookieRequestCache requestCache;
-    
-    //2. 생성자에서 부모객체에 전달
-    public AuthSuccessHandler() {
-        super.setRequestCache(requestCache);
-    }
 	
 	// 입력한 username 과 password 가 일치해서 로그인이 성공하면 이 메소드가 호출된다.
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws ServletException, IOException {
 		
-		Map<String, Object> claims = Map.of("role", "USER", "email", "aaa@naver.com");
-		// 여기 까지 실행순서가 넘어오면 인증을 통과 했으므로 토큰을 발급해서 응답한다.
+		// Authentication 객체에는 인증된 사용자 정보가 들어 있다. userName, role 등등
+		// 현재 role 을 하나만 부여하기 때문에 0번 방에 있는 데이터만 불러오면 된다.
+		GrantedAuthority authority = authentication.getAuthorities().stream().toList().get(0);
+		// ROLE_XXX 형식
+		String role = authority.getAuthority();
+		Map<String, Object> claims = Map.of("role", role);
+		
+		
 		String jwtToken = jwtUtil.generateToken(authentication.getName(), claims);
 		
 		// 공백문자 때문에 인코딩을 해서 저장해야 함
-		String encoded = URLEncoder.encode("Bearer +" + jwtToken, StandardCharsets.UTF_8);
+		String encoded = URLEncoder.encode("Bearer " + jwtToken, StandardCharsets.UTF_8);
 		
 		Cookie cookie = new Cookie(jwtName, encoded);
 		cookie.setMaxAge(cookieExpiration); // 쿠키 유지 시간 초 단위로 설정
 		cookie.setHttpOnly(true); // 웹브라우저에서 JavaScript에서 접근 불가 하도록 설정
 		cookie.setPath("/"); // 모든 경로에서 쿠키를 사용할수 있도록 설정
 		response.addCookie(cookie);
-
-		//3. 로그인 성공이후 미리 저장된 요청이 있었는지 읽어와서
-    	SavedRequest cashed=requestCache.getRequest(request, response);
-    	
-    	//4. 만일 미리 저장된 요청이 없다면 (로그인 하지 않은 상태로 인증이 필요한 경로를 요청하지 않았다면)
-        if(cashed==null) {
-        	//5. 로그인 환영 페이지로 foward 이동 (POST 방식 요청임에 주의!!!)
-        	RequestDispatcher rd=request.getRequestDispatcher("/user/login-success");
-        	rd.forward(request, response);
-        }else {
-        	//6. 원래 가려던 목적지 경로로 리다일렉트 이동 시킨다 (GET 방식 요청 파라미터도 자동으로 같이 가지고 간다)
-        	super.onAuthenticationSuccess(request, response, authentication);
-        }
+		
+		SavedRequest savedRequest = requestCache.getRequest(request, response);
+		
+		if(savedRequest==null) {
+			// 로그인 환영 페이지로 foward 이동 (POST 방식 요청임에 주의!)
+			RequestDispatcher rd = request.getRequestDispatcher("/user/login-success");
+			rd.forward(request, response);
+		}else {
+			String targetUrl = savedRequest.getRedirectUrl();
+			response.sendRedirect(targetUrl);
+		}
 	}
 }
