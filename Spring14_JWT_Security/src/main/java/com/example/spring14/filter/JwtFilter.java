@@ -80,9 +80,7 @@ public class JwtFilter extends OncePerRequestFilter{
 			if (isValid) {
 				Claims claims = jwtUtil.extractAllClaims(jwtToken);
 				String role = claims.get("role", String.class);
-				List<String> roles = List.of(role);
-				List<SimpleGrantedAuthority> authorites = roles.stream().map(SimpleGrantedAuthority::new).toList();
-				UserDetails ud = new User(userName, "", authorites);
+				UserDetails ud = User.withUsername(userName).password("").authorities(role).build();
 				// 사용자가 제출한 사용자 이름과 비밀번호와 같은 인증 자격 증명을 저장
 				UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(ud,
 						null, ud.getAuthorities());

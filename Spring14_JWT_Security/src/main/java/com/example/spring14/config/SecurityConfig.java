@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -22,6 +23,7 @@ import jakarta.servlet.http.Cookie;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 	
 	@Value("${jwt.name}") private String jwtName;
@@ -30,7 +32,7 @@ public class SecurityConfig {
 	
 	@Bean 
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
-			AuthSuccessHandler successHandler) throws Exception{
+			AuthSuccessHandler successHandler, AuthFailHandler failHandler) throws Exception{
 		String[] whiteList= {"/error", "/favicon.ico", "/api/auth", "/", "/play", "/user/loginform", "/user/login-fail", "/user/expired"};
 		
 		httpSecurity
@@ -49,7 +51,7 @@ public class SecurityConfig {
 				.usernameParameter("userName")
 				.passwordParameter("password")
 				.successHandler(successHandler) 
-				.failureForwardUrl("/user/login-fail")
+				.failureHandler(failHandler)
 				.permitAll() 
 		)
 		.logout(config ->
