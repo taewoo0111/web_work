@@ -1,20 +1,24 @@
 package com.example.spring15.controller;
  
  import java.util.Map;
- 
- import org.springframework.beans.factory.annotation.Autowired;
- import org.springframework.http.HttpStatus;
- import org.springframework.http.ResponseEntity;
- import org.springframework.security.authentication.AuthenticationManager;
- import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
- import org.springframework.security.core.Authentication;
- import org.springframework.security.core.GrantedAuthority;
- import org.springframework.web.bind.annotation.PostMapping;
- import org.springframework.web.bind.annotation.RequestBody;
- import org.springframework.web.bind.annotation.RestController;
- 
- import com.example.spring15.dto.UserDto;
- import com.example.spring15.util.JwtUtil;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.spring15.dto.UserDto;
+import com.example.spring15.service.UserService;
+import com.example.spring15.util.JwtUtil;
  
  @RestController
  public class UserController {
@@ -22,6 +26,30 @@ package com.example.spring15.controller;
  	@Autowired JwtUtil jwtUtil;
  	//SecurityConfig 클래스에서 Bean 이된 AuthenticationManager 객체 주입받기 
  	@Autowired AuthenticationManager authManager;
+ 	@Autowired UserService userService;
+ 	
+ 	@PatchMapping("/user/password")
+ 	public String updatePassword(@RequestBody UserDto dto) {
+ 		userService.changePassword(dto);
+ 		return "success";
+ 	}
+ 	
+ 	@PatchMapping("/user")
+ 	public String updateUser(UserDto dto) {
+ 		userService.updateUserInfo(dto);
+ 		return "success!";
+ 	}
+ 	
+ 	@GetMapping("/user")
+ 	public UserDto getInfo() {
+ 		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+ 		return userService.getByUserName(userName);
+ 	}
+ 	
+ 	@GetMapping("/ping")
+ 	public String ping() {
+ 		return "pong";
+ 	}
  	
  	@PostMapping("/auth")
  	public ResponseEntity<String> auth(@RequestBody UserDto dto) throws Exception{
