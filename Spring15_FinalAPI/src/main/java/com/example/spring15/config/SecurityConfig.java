@@ -52,6 +52,7 @@ import com.example.spring15.filter.JwtFilter;
  				.requestMatchers("/admin/**").hasRole("ADMIN") 
  				.requestMatchers("/staff/**").hasAnyRole("ADMIN", "STAFF")
  				.requestMatchers(HttpMethod.POST, "/user").permitAll() //api 회원가입 요청은 받아들이도록
+ 				.requestMatchers(HttpMethod.GET, "/posts").permitAll()
  				.anyRequest().authenticated()
  		)
  		.sessionManagement(config ->
