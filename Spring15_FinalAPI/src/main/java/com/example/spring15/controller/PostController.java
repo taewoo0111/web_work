@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,11 +58,11 @@ public class PostController {
 		return "post/delete";
 	}
 	
-	@PostMapping("/post/update")
-	public String update(PostDto dto, RedirectAttributes ra) {
+	@PatchMapping("/posts/{num}")
+	public PostDto update(@PathVariable("num") long num, @RequestBody PostDto dto) {
+		dto.setNum(num);
 		service.updatePost(dto);
-		ra.addFlashAttribute("updateMessage", dto.getNum()+ " 번 글을 수정했습니다.");
-		return "redirect:/post/view?num=" + dto.getNum();
+		return dto;
 	}
 	
 	@GetMapping("/post/edit")
@@ -69,24 +72,17 @@ public class PostController {
 		return "post/edit";
 	}
 	
-	@GetMapping("/post/view")
-	public String view(@ModelAttribute PostDto dto, Model model, HttpSession session) {
+	@GetMapping("/posts/{num}")
+	public PostDto view(@PathVariable(name = "num") long num, PostDto dto) {
+		dto.setNum(num);
 		PostDto resultDto = service.getDetail(dto);
-		model.addAttribute("postDto", resultDto);
-		
-		if(model.getAttribute("saveMessage") == null) {
-			String sessionId = session.getId();
-			service.manageViewCount(dto.getNum(), sessionId);
-		}
-		
-		return "post/view";
+		return resultDto;
 	}
 	
-	@PostMapping("/post/save")
-	public String save(PostDto dto, RedirectAttributes ra) {
+	@PostMapping("/posts")
+	public Map<String, Object> save(@RequestBody PostDto dto) {
 		long num = service.createPost(dto);
-		ra.addFlashAttribute("saveMessage", "글을 성공적으로 저장했습니다.");
-		return "redirect:/post/view?num=" + num;
+		return Map.of("num", num);
 	}
 	
 	@GetMapping("/post/new")

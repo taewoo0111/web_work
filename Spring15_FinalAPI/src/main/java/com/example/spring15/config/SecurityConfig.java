@@ -38,7 +38,7 @@ import com.example.spring15.filter.JwtFilter;
  	 */
  	@Bean //메소드에서 리턴되는 SecurityFilterChain 을 bean 으로 만들어준다.
  	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
- 		String[] whiteList= {"/auth", "/upload/**"};
+ 		String[] whiteList= {"/auth", "/upload/**", "/editor_upload"};
  		 
  		httpSecurity
  		.headers(header->
@@ -52,7 +52,7 @@ import com.example.spring15.filter.JwtFilter;
  				.requestMatchers("/admin/**").hasRole("ADMIN") 
  				.requestMatchers("/staff/**").hasAnyRole("ADMIN", "STAFF")
  				.requestMatchers(HttpMethod.POST, "/user").permitAll() //api 회원가입 요청은 받아들이도록
- 				.requestMatchers(HttpMethod.GET, "/posts").permitAll()
+ 				.requestMatchers(HttpMethod.GET, "/posts", "/posts/**").permitAll()
  				.anyRequest().authenticated()
  		)
  		.sessionManagement(config ->
