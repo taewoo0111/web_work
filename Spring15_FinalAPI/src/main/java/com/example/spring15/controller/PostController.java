@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -28,14 +29,14 @@ public class PostController {
 	
 	@Autowired private PostService service;
 	
-	@PostMapping("/post/update-comment")
-	public Map<String, Boolean> commentUpdate(CommentDto dto){
+	@PatchMapping("/posts/{postNum}/comments/{num}")
+	public Map<String, Boolean> commentUpdate(@PathVariable long postNum, @PathVariable long num, @RequestBody CommentDto dto){
 		service.updateComment(dto);
 		return Map.of("isSuccess", true);
 	}
 	
-	@GetMapping("/post/delete-comment")
-	public Map<String, Boolean> deleteComment(long num){
+	@DeleteMapping("/posts/{postNum}/comments/{num}")
+	public Map<String, Boolean> deleteComment(@PathVariable long postNum, @PathVariable long num){
 		service.deleteComment(num);
 		return Map.of("isSuccess", true);
 	}
@@ -61,8 +62,8 @@ public class PostController {
  		return dto;
  	}
 	
-	@GetMapping("/post/delete")
-	public String delete(long num) {
+	@DeleteMapping("/posts/{num}")
+	public String delete(@PathVariable("num")long num) {
 		service.deletePost(num);
 		return "post/delete";
 	}
