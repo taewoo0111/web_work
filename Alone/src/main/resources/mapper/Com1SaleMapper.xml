@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.alone.mappers.Com1SaleMapper">
+	<insert id="insert" parameterType="Com1SaleDto">
+        insert into com1_sales
+        (salesdate, storenum, dailySales)
+        values(#{salesDate},#{storeNum},#{dailySales})
+    </insert>
+    <update id="update" parameterType="Com1SaleDto">
+        update com1_sales
+        set dailySales=#{dailySales}
+        where storenum=#{storeNum} and salesdate=#{salesDate}
+    </update>
+    <select id="getStoreDaySale" parameterType="SaleRequestDto" resultType="int">
+        select dailysales
+        from com1_sales
+        where salesdate=#{salesDate} and storenum=#{storeNum}
+    </select>
+    <select id="getStoreMonthSale" parameterType="SaleRequestDto" resultType="int">
+        SELECT extract(year from salesDate) AS year, extract(month from salesDate) AS month, storeNum,
+					       SUM(dailySales) AS monthlySales
+        FROM com1_sales
+        WHERE storeNum=#{storeNum} AND extract(year from salesDate)=#{year} AND extract(month from salesDate)=#{month}
+        GROUP BY extract(year from salesDate), extract(month from salesDate), storeNum
+    </select>
+    <select id="getStoreYearSale" parameterType="SaleRequestDto" resultType="int">
+        SELECT extract(year from salesDate) AS year, storeNum,
+					       SUM(dailySales) AS yearlySales
+        FROM com1_sales
+        WHERE storeNum=#{storeNum} AND extract(year from salesDate)=#{year}
+        GROUP BY extract(year from salesDate), storeNum
+        ORDER BY yearlySales DESC
+    </select>
+    <select id="getListAll" resultType="Com1SaleDto">
+        SELECT storenum, To_char(salesDate, 'YYYY-MM-DD') salesDate, dailySales
+        from com1_sales
+        order by storenum, salesDate asc
+    </select>
+    <select id="getListSaleByYear" resultType="Com1SaleDto">
+        SELECT TO_CHAR(salesdate, 'YYYY') AS syear,
+               SUM(dailySales) AS yearlysales
+        FROM com1_sales
+        GROUP BY TO_CHAR(salesdate, 'YYYY')
+        order by syear desc
+    </select>
+    <select id="getListSaleByMonth" resultType="Com1SaleDto">
+        SELECT TO_CHAR(salesdate, 'YYYY-MM') AS smonth,
+               SUM(dailySales) AS monthlysales
+        FROM com1_sales
+        GROUP BY TO_CHAR(salesdate, 'YYYY-MM')
+        order by smonth desc
+    </select>
+    <select id="getListSaleByStore" parameterType="int" resultType="Com1SaleDto">
+        SELECT To_char(salesDate, 'YYYY-MM-DD') sDate, storeNum, dailySales
+        from com1_sales
+        where storenum=#{storeNum}
+        order by storenum, sDate asc
+    </select>
+    <select id="getListMonthSale" parameterType="int" resultType="Com1SaleDto">
+        SELECT TO_CHAR(salesdate, 'YYYY-MM') AS smonth,
+               SUM(dailySales) AS monthlysales
+        FROM com1_sales
+        where storenum =#{storeNum}
+        GROUP BY TO_CHAR(salesdate, 'YYYY-MM')
+        order by smonth desc
+    </select>
+    <select id="getListYearSale" parameterType="int" resultType="Com1SaleDto">
+        SELECT to_char(salesDate, 'YYYY') syear, sum(dailySales) yearlySales
+        from test_com1_sales
+        where storenum=#{storeNum}
+        group by to_char(salesDate, 'YYYY')
+        order by syear desc
+    </select>
+    <select id="getListByDate" parameterType="string" resultType="Com1SaleDto">
+        SELECT *
+        FROM test_com1_sales
+        WHERE SALESDATE = #{date}
+    </select>
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.alone.mappers.Com1WaitMapper">
+	<insert id="insert" parameterType="Com1WaitDto">
+        insert into com1_wait
+        (comid, storenum, empno, ename, role, ecall, epwd, email)
+        values(#{comid},#{storeNum},com1_empno_seq.nextval,#{eName},#{role},#{eCall},#{ePwd},#{email})
+    </insert>
+    <delete id="delete" parameterType="int">
+        delete from com1_wait
+        where empno=#{empNo}
+    </delete>
+    <select id="getData" parameterType="int" resultType="Com1WaitDto">
+        select comid, storenum, empno, ename, role, ecall, epwd, email
+        from com1_wait
+        where empno=#{empno}
+    </select>
+    <select id="getListAdmin" resultType="Com1WaitDto">
+        select *
+        from com1_wait
+        where role='ADMIN'
+    </select>
+    <select id="getListStaff" resultType="Com1WaitDto">
+        select *
+        from com1_wait
+        where role='STAFF'
+    </select>
+    <select id="getListPart" resultType="Com1WaitDto">
+        select *
+        from com1_wait
+        where role='PART'
+    </select>
+</mapper>

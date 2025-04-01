@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.alone.mappers.Com1EmpMapper">
+	<insert id="insert" parameterType="Com1EmpDto">
+        insert into com1_emp
+        (comid, storenum, empno, ename, role, ecall, epwd, email)
+        values(#{comId},#{storeNum},#{empNo},#{eName},#{role},#{eCall},#{ePwd},#{email})
+    </insert>
+    <delete id="delete" parameterType="int">
+        delete from com1_emp
+        where empno=#{empNo}
+    </delete>
+    <select id="getData" parameterType="int" resultType="Com1EmpDto">
+        select *
+        from com1_emp
+        where empno=#{empno}
+    </select>
+    <update id="update" parameterType="Com1EmpDto">
+        update com1_emp
+        set ename=#{ename},ecall=#{eCall},epwd=#{ePwd},sal=#{sal},hsal=#{hsal},worktime=#{workTime},email=#{email},contract=#{contract}
+        where empno=#{empNo}
+    </update>
+    <select id="getList" resultType="Com1EmpDto">
+        select *
+        from com1_emp
+    </select>
+    <select id="getListAdmin" resultType="Com1EmpDto">
+        select *
+        from com1_emp
+        where role='ADMIN'
+    </select>
+    <select id="getListStaff" resultType="Com1EmpDto">
+        select *
+        from com1_emp
+        where role='STAFF'
+    </select>
+    <select id="getListPart" resultType="Com1EmpDto">
+        select *
+        from com1_emp
+        where role='PART'
+    </select>
+    <select id="getListByStoreNum" parameterType="int" resultType="Com1EmpDto">
+        select *
+        from com1_emp
+        where storenum=#{storenum}
+    </select>
+    <select id="getListPaging" parameterType="Com1EmpDto" resultType="Com1EmpDto">
+        SELECT * FROM (
+        SELECT result1.*, ROWNUM AS rnum FROM (
+        SELECT empno, ename, storenum, role, ecall, email, sal, hsal, worktime,
+        TO_CHAR(createdat, 'YYYY.MM.DD') AS createdat
+        FROM com1_emp
+        <where>
+            <if test="condition != 'ALL'">
+                <choose>
+                    <when test="condition == 'STORE'">
+                        AND storenum = #{storeNum}
+                    </when>
+                    <otherwise>
+                        AND role = #{condition}
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        ORDER BY createdat DESC
+        ) result1
+        )
+        WHERE rnum BETWEEN #{startRowNum} AND #{endRowNum}
+    </select>
+    <select id="getListPagingStaff" parameterType="Com1EmpDto" resultType="Com1EmpDto">
+        SELECT * FROM (
+            SELECT result1.*, ROWNUM AS rnum FROM (
+                SELECT *
+                FROM com1_emp
+                WHERE role = 'STAFF'
+                ORDER BY empno ASC) result1)
+        WHERE rnum BETWEEN #{startRowNum} AND #{endRowNum}
+    </select>
+    <select id="getListPagingPart" parameterType="Com1EmpDto" resultType="Com1EmpDto">
+        SELECT * FROM (
+            SELECT result1.*, ROWNUM AS rnum FROM (
+                SELECT *
+                FROM com1_emp
+                WHERE role = 'PART'
+                ORDER BY empno ASC) result1)
+        WHERE rnum BETWEEN #{startRowNum} AND #{endRowNum}
+    </select>
+    <select id="isDuplicateECall" parameterType="string" resultType="long">
+        select count(*)
+        from com1_emp
+        where ecall=#{eCall}
+    </select>
+    <select id="isDuplicateEmail" parameterType="string" resultType="long">
+        select count(*)
+        from com1_emp
+        where email=#{email}
+    </select>
+    <select id="getCount" parameterType="Com1EmpDto" resultType="long">
+        SELECT COUNT(*) AS count
+        FROM com1_emp
+        <where>
+            <if test="condition != 'ALL'">
+                <choose>
+                    <when test="condition == 'STORE'">
+                        STORENUM = #{storeNum}
+                    </when>
+                    <otherwise>
+                        ROLE = #{condition}
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+    </select>
+</mapper>

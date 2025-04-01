@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.alone.mappers.Com1Mapper">
+	<insert id="insertStore" parameterType="string">
+        insert into com1
+        (storenum, storecall)
+        values(com1_storenum_seq.nextval, #{storeCall})
+    </insert>
+    <delete id="deleteStore" parameterType="int">
+        delete from com1
+        where storenum=#{storeNum}
+    </delete>
+    <select id="getStoreNumList" resultType="integer">
+        select storenum
+        from com1
+    </select>
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.alone.mappers.Com1CeoMapper">
+	<insert id="insert" parameterType="Com1CeoDto">
+        insert into com1_ceo
+            (comid, empno, ename, role, ecall, epwd)
+        values (#{comId}, com1_empno_seq.nextval, #{eName}, 'CEO', #{eCall}, #{ePwd})
+    </insert>
+    <delete id="delete" parameterType="int">
+        delete from com1_ceo
+        where empno=#{empNo}
+    </delete>
+    <update id="update" parameterType="Com1CeoDto">
+        update com1_ceo
+        set ename=#{eName}, ecall=#{eCall}, epwd=#{ePwd}
+        where empno=#{empNo}
+    </update>
+    <select id="getData" parameterType="int" resultType="Com1CeoDto">
+        select comid, empno, ename, role, ecall, epwd
+        from com1_ceo
+        where empno=#{empNo}
+    </select>
+    <select id="getList" resultType="Com1CeoDto">
+        select comid, empno, ename, role, ecall, epwd
+        from com1_ceo
+    </select>
+    <select id="isDuplicateECall" parameterType="string" resultType="long">
+        select count(*)
+        from com1_ceo
+        where ecall=#{eCall}
+    </select>
+    <select id="isDuplicateEmail" parameterType="string" resultType="long">
+        select count(*)
+        from com1_ceo
+        where email=#{email}
+    </select>
+</mapper>
