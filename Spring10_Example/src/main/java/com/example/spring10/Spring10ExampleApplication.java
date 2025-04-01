@@ -2,6 +2,7 @@ package com.example.spring10;
 
 import java.io.IOException;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -10,6 +11,7 @@ import org.springframework.context.event.EventListener;
 
 @PropertySource(value="classpath:custom.properties")
 @SpringBootApplication
+@MapperScan("com.example.spring10.mappers")
 public class Spring10ExampleApplication {
 
 	public static void main(String[] args) {

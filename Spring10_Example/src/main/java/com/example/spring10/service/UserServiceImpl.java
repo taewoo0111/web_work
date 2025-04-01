@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.spring10.dto.UserDto;
 import com.example.spring10.exception.PasswordException;
+import com.example.spring10.mappers.UserMapper;
 import com.example.spring10.repository.UserDao;
 
 @Service
@@ -21,15 +22,17 @@ public class UserServiceImpl implements UserService{
 	@Autowired private UserDao dao;
 	@Autowired private PasswordEncoder encoder;
 	@Value("${file.location}") private String fileLocation;
+	@Autowired private UserMapper userMapper;
 	
 	@Override
 	public UserDto getByNum(long num) {
-		return dao.getData(num);
+		//return dao.getData(num);
+		return userMapper.getDataByNum(num);
 	}
 
 	@Override
 	public UserDto getByUserName(String userName) {
-		return dao.getData(userName);
+		return userMapper.getDataByUserName(userName);
 	}
 
 	@Override
