@@ -14,7 +14,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.example.spring15.service.CustomUserDetailsService;
 import com.example.spring15.util.JwtUtil;
 
 import io.jsonwebtoken.Claims;
@@ -32,7 +31,7 @@ import jakarta.servlet.http.HttpServletResponse;
  	//쿠키에 저장된 token 의 이름 
  	@Value("${jwt.name}") String jwtName;
  	
- 	@Autowired CustomUserDetailsService service;
+ 	
  	
  	@Override
  	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
